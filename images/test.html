@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/picker.js">
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/database.js">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Emoji Picker with Button</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #emoji-input {
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    #emoji-button {
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    emoji-picker {
+      display: none; /* Initially hidden */
+      position: absolute;
+      top: 60px;
+      left: 0;
+      z-index: 1000;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Emoji Picker with Button</h1>
+  <div class="container">
+    <input type="text" id="emoji-input" placeholder="Type here..." />
+    <button id="emoji-button">😀</button>
+  </div>
+  <emoji-picker id="emoji-picker"></emoji-picker>
+
+  <script type="module">
+    import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/picker.js';
+
+    const input = document.getElementById('emoji-input');
+    const button = document.getElementById('emoji-button');
+    const picker = document.getElementById('emoji-picker');
+
+    // Toggle the emoji picker visibility
+    button.addEventListener('click', () => {
+      picker.style.display = picker.style.display === 'block' ? 'none' : 'block';
+      const rect = button.getBoundingClientRect();
+      picker.style.top = `${rect.bottom + window.scrollY}px`;
+      picker.style.left = `${rect.left + window.scrollX}px`;
+    });
+
+    // Add emoji to input field
+    picker.addEventListener('emoji-click', (event) => {
+      input.value += event.detail.unicode;
+      picker.style.display = 'none'; // Hide picker after selection
+    });
+
+    // Close the picker when clicking outside
+    document.addEventListener('click', (event) => {
+      if (!picker.contains(event.target) && event.target !== button) {
+        picker.style.display = 'none';
+      }
+    });
+  </script>
+
+</body>
+</html>
+
